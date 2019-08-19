@@ -22,7 +22,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
             .apiInfo(apiInfo())
             .select()
-            .apis(RequestHandlerSelectors.basePackage("com.hotel.main.controllers"))
+            .apis(RequestHandlerSelectors.basePackage("app"))
             .paths(paths())
             .build();
     }
@@ -30,8 +30,8 @@ public class SwaggerConfig {
     // Describe your apis
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("Hotel Management Rest APIs")
-            .description("This page lists all the rest apis for Hotel Management App.")
+            .title("Spring Boot REST API")
+            .description("Spring Boot REST API Endpoint Documentation")
             .version("1.0-SNAPSHOT")
             .build();
     }
@@ -40,7 +40,7 @@ public class SwaggerConfig {
     private Predicate<String> paths() {
     // Match all paths except /error
         return Predicates.and(
-                PathSelectors.regex("/user.*"),
+                PathSelectors.regex("/users.*"),
                 Predicates.not(PathSelectors.regex("/error.*")));
     }
 

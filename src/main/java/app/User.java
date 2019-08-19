@@ -2,11 +2,12 @@ package app;
 
 import java.util.Random;
 
-public class User {
+class User {
 
     private String name;
     private String email;
     private Integer age;
+    private String ageStatus;
 
     User() {
         // constructor
@@ -55,18 +56,27 @@ public class User {
     public Integer getAge() { return age; }
     public String getEmail() { return email; }
     public String getName() { return name; }
+    public String getAgeStatus() { return ageStatus; }
 
-    public User setAge(Integer age) {
+    User setAge(Integer age) throws Exception {
+        if (age < 0) throw new Exception("Age cannot be less than 0");
         this.age = age;
+        if (age < 30) {
+            this.ageStatus = "Young";
+        } else if (age < 60) {
+            this.ageStatus = "Middle Aged";
+        } else {
+            this.ageStatus = "Old";
+        }
         return this;
     }
 
-    public User setEmail(String email) {
+    User setEmail(String email) {
         this.email = email;
         return this;
     }
 
-    public User setName(String name) {
+    User setName(String name) {
         this.name = name;
         return this;
     }

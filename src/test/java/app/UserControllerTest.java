@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +68,39 @@ public class UserControllerTest {
             .content("{\"age\": 101}"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.age").doesNotExist());
+    }
+
+    @Test
+    public void shouldCalculateAgeStatusYoung() throws Exception {
+        User user = new User();
+        user.setAge(5);
+        String status = user.getAgeStatus();
+        Assert.assertEquals("Young", status);
+    }
+
+    @Test
+    public void shouldCalculateAgeStatusMiddle() throws Exception {
+        User user = new User();
+        user.setAge(31);
+        String status = user.getAgeStatus();
+        Assert.assertEquals("Middle Aged", status);
+    }
+
+    @Test
+    public void shouldCalculateAgeStatusOld() throws Exception {
+        User user = new User();
+        user.setAge(61);
+        String status = user.getAgeStatus();
+        Assert.assertEquals("Old", status);
+    }
+
+    @Test
+    public void shouldThrowException() throws Exception {
+        User user = new User();
+        try {
+            user.setAge(-1);
+        } catch (Exception e) {
+            Assert.assertEquals(e.getMessage(), "Age cannot be less than 0");
+        }
     }
 }

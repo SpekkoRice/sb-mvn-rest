@@ -8,3 +8,5 @@
 - `JAVA SE 8 (LTS)`
 #### Documentation:
 To access the documentation after launching the API just visit: `http://localhost:8080/swagger-ui.html`
+## NOTE:
+There is only one resource endpoint: `https://localhost:8080/users`.

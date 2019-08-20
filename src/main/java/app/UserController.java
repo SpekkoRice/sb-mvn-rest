@@ -3,64 +3,70 @@ package app;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class UserController {
 
-    // We'll make the indexes their id's
-    private ArrayList<User> users;
+    private UsersRepository userRepository;
 
-    public UserController() {
-        this.users = new ArrayList<User>();
-        for(int i = 0; i < 3; i++) {
-            this.users.add(new User().randomize());
+    public UserController(UsersRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    private List<User> getAllUsers() throws Exception {
+        try {
+            List<User> users = new ArrayList<>();
+            userRepository.findAll().forEach(users::add);
+            return users;
+        } catch (Exception e) {
+            throw new Exception("Woops something went wrong");
         }
-
     }
 
     @GetMapping(value = "/users", produces = "application/json")
-    public @ResponseBody ArrayList<User> index() {
-        return this.users;
-    }
-
-    @GetMapping(value = "/users/{index}", produces = "application/json")
-    public @ResponseBody User show(@PathVariable Integer index) {
+    public @ResponseBody List<User> index() {
         try {
-            return this.users.get(index);
+            return this.getAllUsers();
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @GetMapping(value = "/users/{id}", produces = "application/json")
+    public @ResponseBody User show(@PathVariable Long id) {
+        return userRepository.findById(id).get();
     }
 
     @PostMapping(value = "/users", produces = "application/json")
     public @ResponseBody User create(@RequestBody User user) {
         try {
-            this.users.add(user);
-            return user;
+            return userRepository.save(user);
         } catch (Exception e) {
             return null;
         }
     }
 
-    @PutMapping(value = "/users/{index}", produces = "application/json")
-    public @ResponseBody User update(@PathVariable Integer index, @RequestBody User userData) {
+    @PutMapping(value = "/users/{id}", produces = "application/json")
+    public @ResponseBody User update(@PathVariable Long id, @RequestBody User userData) {
         try {
-            User user = this.users.get(index);
-            if (userData.getAge() != null) user.setAge(userData.getAge());
-            if (userData.getName() != null) user.setName(userData.getName());
-            if (userData.getName() != null) user.setEmail(userData.getEmail());
-            return user;
+            User user = userRepository.findById(id).get();
+            if(userData.getAge() != null) user.setAge(userData.getAge());
+            if(userData.getEmail() != null) user.setEmail(userData.getEmail());
+            if(userData.getName() != null) user.setName(userData.getName());
+            return userRepository.save(user);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
 
-    @DeleteMapping(value = "/users/{index}", produces = "application/json")
-    public @ResponseBody ArrayList<User> remove(@PathVariable Integer index) {
+    @DeleteMapping(value = "/users/{id}", produces = "application/json")
+    public @ResponseBody List<User> remove(@PathVariable Long id) {
         try {
-            this.users.remove(index.intValue());
-            return this.users;
+            User user = userRepository.findById(id).get();
+            userRepository.delete(user);
+            return this.getAllUsers();
         } catch (Exception e) {
             return null;
         }

@@ -1,17 +1,35 @@
 package app;
 
+import javax.persistence.*;
 import java.util.Random;
 
+@Entity
+@Table(name="users")
 class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String email;
     private Integer age;
+
+    // What is OOP?
+    @Transient
     private String ageStatus;
 
-    User() {
-        // constructor
+    protected User() {}
+
+    public User(String name, String email, Integer age) {
+        try {
+            this.setAge(age);
+        } catch (Exception e) {
+            // do nothing
+        }
+        this.setName(name);
+        this.setEmail(email);
     }
+
 
     User randomize() {
         this.age = this.randomAge();
@@ -53,10 +71,19 @@ class User {
         return r.nextInt(bounds);
     }
 
+    public Long getId() { return id; }
     public Integer getAge() { return age; }
     public String getEmail() { return email; }
     public String getName() { return name; }
-    public String getAgeStatus() { return ageStatus; }
+    public String getAgeStatus() {
+        if (age < 30) {
+            return "Young";
+        } else if (age < 60) {
+            return "Middle Aged";
+        } else {
+            return "Old";
+        }
+    }
 
     User setAge(Integer age) throws Exception {
         if (age < 0) throw new Exception("Age cannot be less than 0");

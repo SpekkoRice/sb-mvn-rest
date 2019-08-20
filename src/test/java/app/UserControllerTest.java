@@ -45,16 +45,16 @@ public class UserControllerTest {
     public void createUser() throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/users/")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"name\": \"John Doe\", \"age\": 28, \"email\": \"john@example.com\"}"))
+            .content("{\"name\": \"My Person\", \"age\": 28, \"email\": \"myPerson@example.com\"}"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name", equalTo("John Doe")))
-            .andExpect(jsonPath("$.email", equalTo("john@example.com")))
+            .andExpect(jsonPath("$.name", equalTo("My Person")))
+            .andExpect(jsonPath("$.email", equalTo("myPerson@example.com")))
             .andExpect(jsonPath("$.age", equalTo(28)));
     }
 
     @Test
     public void updatesUserAge() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.put("/users/0")
+        mvc.perform(MockMvcRequestBuilders.put("/users/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content("{\"age\": 101}"))
             .andExpect(status().isOk())
